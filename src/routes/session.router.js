@@ -14,7 +14,7 @@ routerSession.get('/view/login', (req, res) => {
 
 // Define la ruta POST para la autenticación del inicio de sesión
 routerSession.post('/auth/login-auth', passport.authenticate('login', {
-    successRedirect: '/view/profile', // Redirige al perfil del usuario después del inicio de sesión exitoso
+    successRedirect: '/api/sessions/current', // Redirige al perfil del usuario después del inicio de sesión exitoso
     failureRedirect: '/view/login', // Redirige a la página de inicio de sesión en caso de fallo de autenticación
     failureFlash: true, // Habilita mensajes flash para el fallo
     successFlash: 'Inicio de sesión exitoso.', // Mensaje flash para el éxito
@@ -36,5 +36,25 @@ routerSession.get('/view/profile', ensureAuthenticated, (req, res) => {
         role: req.user.role
     });
 });
+
+routerSession.get('/api/sessions/current', ensureAuthenticated, (req, res) => {
+    // Acceder a las variables de sesión del usuario y mostrar la información en la plantilla
+    res.render('session', {
+        first_name: req.user.first_name,
+        last_name: req.user.last_name,
+        email: req.user.email,
+        age: req.user.age,
+        role: req.user.role
+    });
+});
+// Google
+
+// routerSession.get('/auth/google', (req, res) => {
+//     //res.render('login', { messages: req.flash('error') });
+// });
+// routerSession.get('/profileG', (req, res) => {
+//     res.render('profileGoogle', { messages: req.flash('error') });
+// });
+
 
 module.exports = routerSession;
